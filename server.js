@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import livereload from 'livereload';
+import connectLivereload from 'connect-livereload';
 
 // Load environment variables
 dotenv.config({path: '.env.local'});
@@ -12,6 +14,22 @@ const PORT = process.env.PORT || 3000;
 
 // Initialize Prisma Client
 const prisma = new PrismaClient();
+
+// Setup livereload in development
+if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch('public');
+
+  // Refresh the browser when public files change
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+
+  app.use(connectLivereload());
+  console.log('LiveReload enabled - watching public/ directory');
+}
 
 // Middleware
 app.use(cors());
