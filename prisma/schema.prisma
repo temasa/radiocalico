@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Example models for Radio Calico
+
+model Show {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  airTime     String
+  hostId      Int
+  host        Host     @relation(fields: [hostId], references: [id])
+  playlists   Playlist[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Host {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bio       String?
+  email     String   @unique
+  shows     Show[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Playlist {
+  id        Int      @id @default(autoincrement())
+  name      String
+  date      DateTime
+  showId    Int
+  show      Show     @relation(fields: [showId], references: [id])
+  songs     Song[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Song {
+  id         Int      @id @default(autoincrement())
+  title      String
+  artist     String
+  album      String?
+  duration   Int?
+  playlistId Int
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  createdAt  DateTime @default(now())
+}

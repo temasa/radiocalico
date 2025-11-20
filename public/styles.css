@@ -1,0 +1,362 @@
+/* Radio Calico Styles - Following Brand Guidelines */
+
+/* CSS Variables for Brand Colors */
+:root {
+    --mint: #D8F2D5;
+    --forest-green: #1F4E23;
+    --teal: #38A29D;
+    --calico-orange: #EFA63C;
+    --charcoal: #231F20;
+    --cream: #F5EADA;
+    --white: #FFFFFF;
+}
+
+/* Global Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--charcoal);
+    background-color: var(--white);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", sans-serif;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--forest-green);
+    margin-bottom: 32px;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--teal);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--mint);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, rgba(31, 78, 35, 0.9), rgba(56, 162, 157, 0.8)),
+                url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1600') center/cover no-repeat;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 64px 24px;
+}
+
+.hero-overlay {
+    max-width: 800px;
+}
+
+.hero h1 {
+    color: var(--white);
+    margin-bottom: 16px;
+}
+
+.hero-subtitle {
+    color: var(--mint);
+    font-size: 18px;
+    margin-bottom: 48px;
+    font-weight: 600;
+}
+
+/* Audio Player */
+.audio-player {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-listen {
+    background-color: var(--mint);
+    color: var(--forest-green);
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-listen:hover {
+    background-color: var(--calico-orange);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.play-icon {
+    font-size: 14px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(255,255,255,0.9);
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.volume-icon {
+    font-size: 20px;
+}
+
+#volume-slider {
+    width: 120px;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    accent-color: var(--teal);
+}
+
+/* Content Sections */
+.content-section {
+    padding: 64px 0;
+}
+
+.playlists-section {
+    background-color: var(--cream);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    color: var(--forest-green);
+    margin-bottom: 12px;
+}
+
+.card-meta {
+    color: var(--teal);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.card-description {
+    color: var(--charcoal);
+    margin-bottom: 16px;
+}
+
+.card-tag {
+    display: inline-block;
+    background-color: var(--mint);
+    color: var(--forest-green);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* Host Card Specific */
+.host-card .card-bio {
+    font-size: 14px;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+}
+
+.host-card .shows-count {
+    color: var(--teal);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Playlist Card Specific */
+.playlist-card .date {
+    color: var(--calico-orange);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.songs-list {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--cream);
+}
+
+.song-item {
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--charcoal);
+}
+
+.song-item strong {
+    color: var(--forest-green);
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 48px;
+    color: var(--teal);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--cream);
+    padding: 64px 0 32px;
+    margin-top: 64px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 48px;
+    margin-bottom: 32px;
+}
+
+.footer-section h3 {
+    color: var(--forest-green);
+    margin-bottom: 16px;
+}
+
+.footer-section p {
+    color: var(--charcoal);
+    line-height: 1.6;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section a {
+    color: var(--teal);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--forest-green);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--mint);
+    color: var(--charcoal);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .nav-links {
+        gap: 16px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .audio-player {
+        flex-direction: column;
+    }
+}
