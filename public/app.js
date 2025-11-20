@@ -1,58 +1,135 @@
 // Radio Calico - Client-side JavaScript
 
 // Audio Playlist - Add your audio files to /assets/audio/ folder
+// Supports both local files (starting with /) and remote URLs (starting with http/https)
 const audioPlaylist = [
     '/assets/audio/track1.mp3',
     '/assets/audio/track2.mp3',
     '/assets/audio/track3.mp3',
+    'https://d3d4yli4hf5bmh.cloudfront.net/hls/live.m3u8', // Live HLS stream
     // Add more tracks as needed
 ];
-
-// Fallback stream URL if no local files are found
-const STREAM_URL = 'https://d3d4yli4hf5bmh.cloudfront.net/hls/live.m3u8';
 
 // Audio Player Setup
 let isPlaying = false;
 let currentTrackIndex = 0;
-let useLocalFiles = true;
 const audioElement = document.getElementById('radio-stream');
 const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
 const volumeSlider = document.getElementById('volume-slider');
+const trackInfoElement = document.getElementById('track-info');
 
 // Initialize audio
 audioElement.volume = 0.7;
 
-// Check if local audio files exist, otherwise use stream
-async function initializeAudio() {
-    if (useLocalFiles && audioPlaylist.length > 0) {
-        audioElement.src = audioPlaylist[currentTrackIndex];
+// Helper function to detect if a URL is remote
+function isRemoteUrl(url) {
+    return url.startsWith('http://') || url.startsWith('https://');
+}
 
-        // Try to load the first track to check if it exists
-        audioElement.addEventListener('error', function handleError() {
-            console.log('Local audio file not found, switching to stream...');
-            useLocalFiles = false;
-            audioElement.src = STREAM_URL;
-            audioElement.removeEventListener('error', handleError);
-        }, { once: true });
+// Helper function to detect if a URL is a live stream
+function isLiveStream(url) {
+    return url.includes('.m3u8') || url.includes('.mpd');
+}
 
-        // Auto-advance to next track when current one ends
+// Helper function to get track name from URL
+function getTrackName(url) {
+    if (isRemoteUrl(url)) {
+        if (isLiveStream(url)) {
+            return 'Live Stream';
+        }
+        return url.split('/').pop() || 'Remote Track';
+    }
+    return url.split('/').pop() || 'Local Track';
+}
+
+// Update track info display
+function updateTrackInfo(track, index) {
+    const trackName = getTrackName(track);
+    const trackType = isRemoteUrl(track) ? 'Remote' : 'Local';
+    const isStream = isLiveStream(track);
+
+    trackInfoElement.innerHTML = `
+        <span class="track-name">${trackName}</span>
+        <span class="track-type">${trackType}${isStream ? ' Stream' : ''} • ${index + 1}/${audioPlaylist.length}</span>
+    `;
+}
+
+// Initialize audio player
+function initializeAudio() {
+    if (audioPlaylist.length > 0) {
+        loadTrack(currentTrackIndex);
+
+        // Auto-advance to next track when current one ends (except for live streams)
         audioElement.addEventListener('ended', () => {
-            if (useLocalFiles) {
+            const currentTrack = audioPlaylist[currentTrackIndex];
+            if (!isLiveStream(currentTrack)) {
+                console.log('Track ended, playing next...');
                 playNextTrack();
             }
         });
+
+        // Handle errors
+        audioElement.addEventListener('error', (e) => {
+            const currentTrack = audioPlaylist[currentTrackIndex];
+            const trackType = isRemoteUrl(currentTrack) ? 'remote' : 'local';
+            console.error(`Error loading ${trackType} track: ${currentTrack}`, e);
+
+            // Try next track if there are more
+            if (audioPlaylist.length > 1) {
+                console.log('Trying next track...');
+                playNextTrack();
+            } else {
+                alert(`Unable to play ${trackType} audio file. Please check the file or your connection.`);
+            }
+        });
     } else {
-        audioElement.src = STREAM_URL;
+        console.error('No tracks in playlist');
+    }
+}
+
+// Load a track by index
+function loadTrack(index) {
+    if (index >= 0 && index < audioPlaylist.length) {
+        currentTrackIndex = index;
+        const track = audioPlaylist[currentTrackIndex];
+        const trackType = isRemoteUrl(track) ? 'remote' : 'local';
+        const trackName = getTrackName(track);
+
+        console.log(`Loading ${trackType} track ${currentTrackIndex + 1}/${audioPlaylist.length}: ${trackName}`);
+        audioElement.src = track;
+
+        // Update track info display
+        updateTrackInfo(track, currentTrackIndex);
+
+        // Update button text to show track info
+        if (!isPlaying) {
+            playBtn.innerHTML = `<span class="play-icon">▶</span> Play Track ${currentTrackIndex + 1}`;
+        }
     }
 }
 
 // Play next track in playlist
 function playNextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % audioPlaylist.length;
-    audioElement.src = audioPlaylist[currentTrackIndex];
+    const nextIndex = (currentTrackIndex + 1) % audioPlaylist.length;
+    loadTrack(nextIndex);
+
     if (isPlaying) {
         audioElement.play().catch(err => {
             console.error('Error playing next track:', err);
+        });
+    }
+}
+
+// Play previous track in playlist
+function playPreviousTrack() {
+    const prevIndex = currentTrackIndex - 1 < 0 ? audioPlaylist.length - 1 : currentTrackIndex - 1;
+    loadTrack(prevIndex);
+
+    if (isPlaying) {
+        audioElement.play().catch(err => {
+            console.error('Error playing previous track:', err);
         });
     }
 }
@@ -61,23 +138,15 @@ function playNextTrack() {
 playBtn.addEventListener('click', () => {
     if (isPlaying) {
         audioElement.pause();
-        playBtn.innerHTML = '<span class="play-icon">▶</span> Listen Now';
+        playBtn.innerHTML = `<span class="play-icon">▶</span> Play Track ${currentTrackIndex + 1}`;
         isPlaying = false;
     } else {
+        const track = audioPlaylist[currentTrackIndex];
+        const trackType = isRemoteUrl(track) ? 'remote' : 'local';
+
         audioElement.play().catch(err => {
-            console.error('Error playing audio:', err);
-            if (useLocalFiles) {
-                // If local files fail, try the stream
-                console.log('Switching to stream...');
-                useLocalFiles = false;
-                audioElement.src = STREAM_URL;
-                audioElement.play().catch(streamErr => {
-                    console.error('Stream also failed:', streamErr);
-                    alert('Unable to play audio. Please check your connection or add audio files to /assets/audio/');
-                });
-            } else {
-                alert('Unable to play stream. Please check your connection.');
-            }
+            console.error(`Error playing ${trackType} audio:`, err);
+            alert(`Unable to play ${trackType} audio. Please check the file or your connection.`);
         });
         playBtn.innerHTML = '<span class="play-icon">⏸</span> Pause';
         isPlaying = true;
@@ -87,6 +156,32 @@ playBtn.addEventListener('click', () => {
 // Volume control
 volumeSlider.addEventListener('input', (e) => {
     audioElement.volume = e.target.value / 100;
+});
+
+// Next/Previous button controls
+nextBtn.addEventListener('click', () => {
+    playNextTrack();
+});
+
+prevBtn.addEventListener('click', () => {
+    playPreviousTrack();
+});
+
+// Keyboard shortcuts for track navigation
+document.addEventListener('keydown', (e) => {
+    // Only if not typing in an input field
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            playNextTrack();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            playPreviousTrack();
+        } else if (e.key === ' ') {
+            e.preventDefault();
+            playBtn.click();
+        }
+    }
 });
 
 // Initialize audio on page load

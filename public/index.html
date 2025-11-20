@@ -32,10 +32,22 @@
             <p class="hero-subtitle">24-bit / 48 kHz Lossless Streaming - Ad-Free, Data-Free, Subscription-Free</p>
             <div class="audio-player">
                 <audio id="radio-stream" preload="none"></audio>
-                <button class="btn-listen" id="play-btn">
-                    <span class="play-icon">▶</span>
-                    Listen Now
-                </button>
+                <div class="track-info" id="track-info">
+                    <span class="track-name">Track 1</span>
+                    <span class="track-type">Local</span>
+                </div>
+                <div class="player-controls">
+                    <button class="btn-control" id="prev-btn" title="Previous Track (Left Arrow)">
+                        <span class="control-icon">⏮</span>
+                    </button>
+                    <button class="btn-listen" id="play-btn">
+                        <span class="play-icon">▶</span>
+                        Listen Now
+                    </button>
+                    <button class="btn-control" id="next-btn" title="Next Track (Right Arrow)">
+                        <span class="control-icon">⏭</span>
+                    </button>
+                </div>
                 <div class="volume-control">
                     <span class="volume-icon">🔊</span>
                     <input type="range" id="volume-slider" min="0" max="100" value="70">
