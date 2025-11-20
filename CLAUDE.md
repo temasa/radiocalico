@@ -1,0 +1,2 @@
+- This a prototype website which allows users to listen to streaming audio. The website use nodejs and expressjs and for development, the server is configured to automatically reload when changes made to server files and to client files.
+- For persistence layer, it uses sqlite with prisma adapter.
