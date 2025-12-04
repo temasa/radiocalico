@@ -231,6 +231,284 @@ app.post('/api/playlists', async (req, res) => {
   }
 });
 
+// ====== Metadata API ======
+// Get now playing metadata from CloudFront
+app.get('/api/metadata', async (req, res) => {
+  try {
+    const metadataUrl = 'https://d3d4yli4hf5bmh.cloudfront.net/metadatav2.json';
+    const response = await fetch(metadataUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch metadata: ${response.statusText}`);
+    }
+
+    const metadata = await response.json();
+    res.json(metadata);
+  } catch (error) {
+    console.error('Error fetching metadata:', error);
+    res.status(500).json({
+      error: 'Failed to fetch metadata',
+      message: error.message
+    });
+  }
+});
+
+// Save metadata to database as a playlist
+app.post('/api/metadata/save', async (req, res) => {
+  try {
+    const metadataUrl = 'https://d3d4yli4hf5bmh.cloudfront.net/metadatav2.json';
+    const response = await fetch(metadataUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch metadata: ${response.statusText}`);
+    }
+
+    const metadata = await response.json();
+
+    // Find or create the "Live Stream" host
+    let host = await prisma.host.findFirst({
+      where: { email: 'livestream@radiocalico.com' }
+    });
+
+    if (!host) {
+      host = await prisma.host.create({
+        data: {
+          name: 'Radio Calico Live',
+          bio: 'Live streaming radio station',
+          email: 'livestream@radiocalico.com'
+        }
+      });
+    }
+
+    // Find or create the "Live Stream" show
+    let show = await prisma.show.findFirst({
+      where: {
+        title: 'Live Stream',
+        hostId: host.id
+      }
+    });
+
+    if (!show) {
+      show = await prisma.show.create({
+        data: {
+          title: 'Live Stream',
+          description: '24/7 Live streaming audio',
+          airTime: '24/7',
+          hostId: host.id
+        }
+      });
+    }
+
+    // Find or create today's "Now Playing" playlist
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const playlistName = `Now Playing - ${new Date().toLocaleDateString()}`;
+
+    let playlist = await prisma.playlist.findFirst({
+      where: {
+        showId: show.id,
+        date: {
+          gte: today
+        }
+      },
+      include: {
+        songs: true
+      }
+    });
+
+    if (!playlist) {
+      playlist = await prisma.playlist.create({
+        data: {
+          name: playlistName,
+          date: new Date(),
+          showId: show.id
+        },
+        include: {
+          songs: true
+        }
+      });
+    }
+
+    // Build list of all songs from metadata (current + previous)
+    const songs = [
+      {
+        title: metadata.title,
+        artist: metadata.artist,
+        album: metadata.album || null
+      }
+    ];
+
+    // Add previous songs
+    for (let i = 1; i <= 5; i++) {
+      const artistKey = `prev_artist_${i}`;
+      const titleKey = `prev_title_${i}`;
+
+      if (metadata[artistKey] && metadata[titleKey]) {
+        songs.push({
+          title: metadata[titleKey],
+          artist: metadata[artistKey],
+          album: null
+        });
+      }
+    }
+
+    // Delete existing songs from the playlist
+    await prisma.song.deleteMany({
+      where: { playlistId: playlist.id }
+    });
+
+    // Add new songs to the playlist
+    for (const song of songs) {
+      await prisma.song.create({
+        data: {
+          title: song.title,
+          artist: song.artist,
+          album: song.album,
+          playlistId: playlist.id
+        }
+      });
+    }
+
+    // Fetch the updated playlist with songs
+    const updatedPlaylist = await prisma.playlist.findUnique({
+      where: { id: playlist.id },
+      include: {
+        songs: true,
+        show: {
+          include: {
+            host: true
+          }
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      playlist: updatedPlaylist
+    });
+  } catch (error) {
+    console.error('Error saving metadata:', error);
+    res.status(500).json({
+      error: 'Failed to save metadata',
+      message: error.message
+    });
+  }
+});
+
+// ====== Ratings API ======
+// Submit a rating for a song
+app.post('/api/ratings', async (req, res) => {
+  try {
+    const { songArtist, songTitle, ratingType, clientId } = req.body;
+
+    // Validate input
+    if (!songArtist || !songTitle || !ratingType || !clientId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if (ratingType !== 'up' && ratingType !== 'down') {
+      return res.status(400).json({ error: 'Invalid rating type' });
+    }
+
+    // Check if user already rated this song
+    const existingRating = await prisma.rating.findUnique({
+      where: {
+        songArtist_songTitle_clientId: {
+          songArtist,
+          songTitle,
+          clientId
+        }
+      }
+    });
+
+    if (existingRating) {
+      // Update the existing rating if it's different
+      if (existingRating.ratingType !== ratingType) {
+        const updated = await prisma.rating.update({
+          where: { id: existingRating.id },
+          data: { ratingType }
+        });
+        return res.json({ success: true, message: 'Rating updated', rating: updated });
+      }
+      return res.status(400).json({ error: 'You have already rated this song' });
+    }
+
+    // Create new rating
+    const rating = await prisma.rating.create({
+      data: {
+        songArtist,
+        songTitle,
+        ratingType,
+        clientId
+      }
+    });
+
+    res.status(201).json({ success: true, rating });
+  } catch (error) {
+    console.error('Error creating rating:', error);
+    res.status(500).json({ error: 'Failed to create rating', message: error.message });
+  }
+});
+
+// Get ratings for a song
+app.get('/api/ratings/:artist/:title', async (req, res) => {
+  try {
+    const { artist, title } = req.params;
+
+    const ratings = await prisma.rating.findMany({
+      where: {
+        songArtist: decodeURIComponent(artist),
+        songTitle: decodeURIComponent(title)
+      }
+    });
+
+    const upCount = ratings.filter(r => r.ratingType === 'up').length;
+    const downCount = ratings.filter(r => r.ratingType === 'down').length;
+
+    res.json({
+      songArtist: decodeURIComponent(artist),
+      songTitle: decodeURIComponent(title),
+      thumbsUp: upCount,
+      thumbsDown: downCount,
+      total: ratings.length
+    });
+  } catch (error) {
+    console.error('Error fetching ratings:', error);
+    res.status(500).json({ error: 'Failed to fetch ratings', message: error.message });
+  }
+});
+
+// Delete a rating (cancel rating)
+app.delete('/api/ratings', async (req, res) => {
+  try {
+    const { songArtist, songTitle, clientId } = req.body;
+
+    // Validate input
+    if (!songArtist || !songTitle || !clientId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Find and delete the rating
+    const deletedRating = await prisma.rating.deleteMany({
+      where: {
+        songArtist,
+        songTitle,
+        clientId
+      }
+    });
+
+    if (deletedRating.count === 0) {
+      return res.status(404).json({ error: 'Rating not found' });
+    }
+
+    res.json({ success: true, message: 'Rating deleted' });
+  } catch (error) {
+    console.error('Error deleting rating:', error);
+    res.status(500).json({ error: 'Failed to delete rating', message: error.message });
+  }
+});
+
 // ====== Songs API ======
 // Get all songs
 app.get('/api/songs', async (req, res) => {

@@ -1,14 +1,14 @@
 /* Radio Calico Styles - Following Brand Guidelines */
 
-/* CSS Variables for Brand Colors */
+/* CSS Variables for Brand Colors - Official Style Guide */
 :root {
-    --mint: #D8F2D5;
-    --forest-green: #1F4E23;
-    --teal: #38A29D;
-    --calico-orange: #EFA63C;
-    --charcoal: #231F20;
-    --cream: #F5EADA;
-    --white: #FFFFFF;
+    --mint: #D8F2D5;           /* Logo circle, background fills, accents */
+    --forest-green: #1F4E23;   /* Logo border, primary buttons, headings */
+    --teal: #38A29D;           /* Headphone ear-cups, nav bar background */
+    --calico-orange: #EFA63C;  /* Cat's orange patch, call-to-action bits */
+    --charcoal: #231F20;       /* Body text, icon outlines */
+    --cream: #F5EADA;          /* Secondary backgrounds, cards */
+    --white: #FFFFFF;          /* Text on dark, backgrounds */
 }
 
 /* Global Reset and Base Styles */
@@ -41,7 +41,7 @@ h2 {
     font-weight: 600;
     line-height: 1.3;
     color: var(--forest-green);
-    margin-bottom: 32px;
+    margin-bottom: 32px; /* 32px = 2 x 16px baseline */
 }
 
 h3 {
@@ -50,83 +50,113 @@ h3 {
     line-height: 1.4;
 }
 
-/* Navigation */
-.navbar {
-    background-color: var(--teal);
-    padding: 16px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Header */
+.site-header {
+    background-color: var(--charcoal);
+    padding: 24px 0;
 }
 
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+.header-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    gap: 16px;
 }
 
-.logo img {
+.header-logo {
     height: 50px;
     width: auto;
+    min-width: 40px;
 }
 
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 32px;
-}
-
-.nav-links a {
-    color: var(--white);
-    text-decoration: none;
+.header-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 36px;
     font-weight: 600;
-    font-size: 16px;
-    transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-    color: var(--mint);
-}
-
-/* Hero Section */
-.hero {
-    background: linear-gradient(135deg, rgba(31, 78, 35, 0.9), rgba(56, 162, 157, 0.8)),
-                url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1600') center/cover no-repeat;
-    min-height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 64px 24px;
-}
-
-.hero-overlay {
-    max-width: 800px;
-}
-
-.hero h1 {
     color: var(--white);
-    margin-bottom: 16px;
+    margin: 0;
 }
 
-.hero-subtitle {
-    color: var(--mint);
-    font-size: 18px;
-    margin-bottom: 48px;
-    font-weight: 600;
+/* Main Content */
+.main-content {
+    background-color: var(--white);
+    padding: 48px 0;
 }
 
-/* Audio Player */
-.audio-player {
+.now-playing-card {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+.album-art-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.album-art-large {
+    width: 540px;
+    height: 540px;
+    object-fit: cover;
+    display: block;
+}
+
+.year-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--calico-orange);
+    color: var(--white);
+    font-family: "Montserrat", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    padding: 24px 32px;
+    transform: rotate(45deg);
+    transform-origin: top right;
+}
+
+/* Song Info Section */
+.song-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    align-items: center;
-    justify-content: center;
+    gap: 24px;
+}
+
+.song-artist {
+    font-family: "Montserrat", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.song-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin: 0;
+}
+
+.song-album {
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin: 0;
+}
+
+.quality-info {
+    color: var(--charcoal);
+    font-size: 16px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.quality-info p {
+    margin: 4px 0;
 }
 
 .track-info {
@@ -181,8 +211,8 @@ h3 {
 }
 
 .btn-listen {
-    background-color: var(--mint);
-    color: var(--forest-green);
+    background-color: var(--forest-green);
+    color: var(--white);
     border: none;
     border-radius: 4px;
     padding: 0.75rem 1.5rem;
@@ -200,7 +230,7 @@ h3 {
 }
 
 .btn-listen:hover {
-    background-color: var(--calico-orange);
+    background-color: var(--teal);
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -238,24 +268,25 @@ h3 {
 
 /* Content Sections */
 .content-section {
-    padding: 64px 0;
+    padding: 64px 0; /* 64px = 4 x 16px baseline */
 }
 
-.playlists-section {
+.now-playing-section {
     background-color: var(--cream);
+    min-height: 500px;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1200px; /* Max content width per style guide */
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 24px; /* 24px gutters per style guide */
 }
 
 /* Content Grid */
 .content-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 32px;
+    gap: 32px; /* 32px = 2 x 16px baseline */
 }
 
 /* Card Styles */
@@ -337,6 +368,313 @@ h3 {
     color: var(--forest-green);
 }
 
+.song-album {
+    font-size: 12px;
+    color: var(--teal);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.song-duration {
+    font-size: 12px;
+    color: var(--charcoal);
+    opacity: 0.7;
+    margin-top: 2px;
+}
+
+/* Now Playing Section */
+.recent-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--forest-green);
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+.current-track-card {
+    background: linear-gradient(135deg, var(--teal), var(--forest-green));
+    border-radius: 12px;
+    padding: 48px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.current-track-content {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.album-art-container {
+    flex-shrink: 0;
+}
+
+.album-art {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    border: 3px solid var(--mint);
+}
+
+.current-track-info {
+    color: var(--white);
+    flex: 1;
+    text-align: left;
+}
+
+.track-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mint);
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.track-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.track-artist {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--mint);
+}
+
+.track-album {
+    font-size: 16px;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+.track-quality {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--calico-orange);
+    font-weight: 600;
+    margin-top: 16px;
+}
+
+/* Rating Section */
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rating-label {
+    font-size: 16px;
+    color: var(--charcoal);
+}
+
+.rating-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.rating-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 4px;
+}
+
+.rating-btn:hover {
+    transform: scale(1.2);
+}
+
+.rating-btn.rated {
+    filter: brightness(1.2);
+}
+
+/* Audio Player Control Bar */
+.player-control-bar {
+    background-color: #4a4a4a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.play-pause-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+}
+
+.play-pause-btn:hover {
+    color: var(--mint);
+}
+
+.time-display {
+    color: var(--white);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.volume-control-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.volume-icon {
+    color: var(--white);
+    font-size: 20px;
+}
+
+.volume-slider {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    cursor: pointer;
+    border: none;
+}
+
+/* Previous Tracks Section */
+.previous-tracks-section {
+    background-color: var(--mint);
+    padding: 48px 0;
+}
+
+.previous-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin: 0 0 24px 0;
+}
+
+.previous-tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.previous-track-item {
+    color: var(--charcoal);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.previous-track-artist {
+    font-weight: 600;
+}
+
+.previous-track-title {
+    font-style: italic;
+    font-weight: 400;
+}
+
+.recent-track-item {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.recent-track-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.recent-track-item.selected {
+    background: linear-gradient(90deg, var(--mint), var(--white));
+    border-left: 4px solid var(--teal);
+    box-shadow: 0 4px 16px rgba(56, 162, 157, 0.3);
+}
+
+.track-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--teal);
+    min-width: 32px;
+    text-align: center;
+}
+
+.track-details {
+    flex: 1;
+}
+
+.track-title-small {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+}
+
+.track-artist-small {
+    font-size: 14px;
+    color: var(--teal);
+    font-weight: 500;
+}
+
+.play-btn-small {
+    background-color: var(--forest-green);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 40px; /* Minimum hit area per style guide */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.play-btn-small:hover {
+    background-color: var(--teal);
+    transform: scale(1.1);
+}
+
+.play-icon-small {
+    font-size: 12px;
+}
+
 /* Loading State */
 .loading {
     text-align: center;
@@ -349,7 +687,7 @@ h3 {
 /* Footer */
 .footer {
     background-color: var(--cream);
-    padding: 64px 0 32px;
+    padding: 64px 0 32px; /* 64px, 32px = multiples of 16px */
     margin-top: 64px;
 }
 
@@ -379,13 +717,13 @@ h3 {
 }
 
 .footer-section a {
-    color: var(--teal);
+    color: var(--mint);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer-section a:hover {
-    color: var(--forest-green);
+    color: var(--teal);
 }
 
 .footer-bottom {
@@ -415,5 +753,78 @@ h3 {
 
     .audio-player {
         flex-direction: column;
+    }
+
+    .current-track-card {
+        padding: 32px 24px;
+    }
+
+    .current-track-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .current-track-info {
+        text-align: center;
+    }
+
+    .album-art {
+        width: 160px;
+        height: 160px;
+    }
+
+    .track-title {
+        font-size: 28px;
+    }
+
+    .track-artist {
+        font-size: 20px;
+    }
+
+    .rating-container {
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .rating-btn {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+
+    .rating-count {
+        font-size: 14px;
+    }
+
+    .recent-title {
+        font-size: 24px;
+        margin-top: 32px;
+    }
+
+    .recent-track-item {
+        padding: 12px 16px;
+        gap: 12px;
+    }
+
+    .track-number {
+        font-size: 18px;
+        min-width: 28px;
+    }
+
+    .track-title-small {
+        font-size: 14px;
+    }
+
+    .track-artist-small {
+        font-size: 13px;
+    }
+
+    .play-btn-small {
+        width: 32px;
+        height: 32px;
+    }
+
+    .play-icon-small {
+        font-size: 11px;
     }
 }

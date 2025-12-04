@@ -55,3 +55,15 @@ model Song {
   playlist   Playlist @relation(fields: [playlistId], references: [id])
   createdAt  DateTime @default(now())
 }
+
+model Rating {
+  id         Int      @id @default(autoincrement())
+  songArtist String
+  songTitle  String
+  ratingType String   // "up" or "down"
+  clientId   String   // unique identifier for the user's browser
+  createdAt  DateTime @default(now())
+
+  @@unique([songArtist, songTitle, clientId])
+  @@index([songArtist, songTitle])
+}

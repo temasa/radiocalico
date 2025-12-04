@@ -10,108 +10,35 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <img src="../RadioCalicoLogoTM.png" alt="Radio Calico Logo">
-            </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#shows">Shows</a></li>
-                <li><a href="#playlists">Playlists</a></li>
-                <li><a href="#hosts">Hosts</a></li>
-            </ul>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-content">
+            <img src="RadioCalicoLogoTM.png" alt="Radio Calico Logo" class="header-logo">
+            <h1 class="header-title">Radio Calico</h1>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-overlay">
-            <h1>Crystal-Clear Audio Experience</h1>
-            <p class="hero-subtitle">24-bit / 48 kHz Lossless Streaming - Ad-Free, Data-Free, Subscription-Free</p>
-            <div class="audio-player">
-                <audio id="radio-stream" preload="none"></audio>
-                <div class="track-info" id="track-info">
-                    <span class="track-name">Track 1</span>
-                    <span class="track-type">Local</span>
-                </div>
-                <div class="player-controls">
-                    <button class="btn-control" id="prev-btn" title="Previous Track (Left Arrow)">
-                        <span class="control-icon">⏮</span>
-                    </button>
-                    <button class="btn-listen" id="play-btn">
-                        <span class="play-icon">▶</span>
-                        Listen Now
-                    </button>
-                    <button class="btn-control" id="next-btn" title="Next Track (Right Arrow)">
-                        <span class="control-icon">⏭</span>
-                    </button>
-                </div>
-                <div class="volume-control">
-                    <span class="volume-icon">🔊</span>
-                    <input type="range" id="volume-slider" min="0" max="100" value="70">
-                </div>
+    <!-- Hidden Audio Element -->
+    <audio id="radio-stream" preload="none"></audio>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div id="current-track" class="now-playing-card">
+                <div class="loading">Waiting for stream...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Previous Tracks Section -->
+    <section class="previous-tracks-section">
+        <div class="container">
+            <h2 class="previous-title">Previous tracks:</h2>
+            <div id="previous-tracks" class="previous-tracks-list">
+                <div class="loading">Waiting for stream...</div>
             </div>
         </div>
     </section>
-
-    <!-- Shows Section -->
-    <section class="content-section" id="shows">
-        <div class="container">
-            <h2>Our Shows</h2>
-            <div id="shows-grid" class="content-grid">
-                <div class="loading">Loading shows...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Playlists Section -->
-    <section class="content-section playlists-section" id="playlists">
-        <div class="container">
-            <h2>Recent Playlists</h2>
-            <div id="playlists-grid" class="content-grid">
-                <div class="loading">Loading playlists...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hosts Section -->
-    <section class="content-section" id="hosts">
-        <div class="container">
-            <h2>Our Hosts</h2>
-            <div id="hosts-grid" class="content-grid">
-                <div class="loading">Loading hosts...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Radio Calico</h3>
-                    <p>Premium lossless audio streaming with no ads, no data collection, and no subscriptions.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#shows">Shows</a></li>
-                        <li><a href="#playlists">Playlists</a></li>
-                        <li><a href="#hosts">Hosts</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Audio Quality</h3>
-                    <p>24-bit / 48 kHz<br>Lossless HLS Streaming</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Radio Calico. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="app.js"></script>
 </body>
